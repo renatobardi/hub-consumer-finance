@@ -14,20 +14,11 @@ import { MOCK_ACTIONS, MOCK_JIRA, MOCK_SERVICENOW } from "@/plugins/github-actio
 import { ReactNode } from "react";
 
 // Inline simple i18n mock for demonstration
-const t = (key: string) => {
-    const dict: Record<string, string> = {
-        "finops.title": "Cloud Costs & Waste",
-        "finops.desc": "Projeção Financeira e Desperdício Identificado",
-        "appsec.title": "Security Scorecard",
-        "appsec.desc": "Conformidade e Vulnerabilidades (Snyk/GHAS)",
-        "actions.title": "GitHub Actions",
-        "actions.desc": "Últimas 5 runs do pipeline",
-        "jira.title": "Jira & ServiceNow",
-    };
-    return dict[key] || key;
-};
+import { useTranslation } from "react-i18next";
 
+// Simple mapping for tab trigger states if needed, though standard classes are better
 export function ServiceDetail() {
+    const { t } = useTranslation();
     const params = useParams({ from: "/service/$serviceId" });
 
     return (
@@ -35,41 +26,41 @@ export function ServiceDetail() {
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-border/40 pb-5">
                 <div>
-                    <h1 className="text-4xl font-extrabold tracking-tight mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
+                    <h1 className="text-4xl font-extrabold tracking-tight mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-emerald-600 dark:from-blue-400 dark:to-emerald-400">
                         {params.serviceId}
                     </h1>
                     <div className="flex gap-2 text-sm text-muted-foreground items-center">
                         <Badge variant="outline" className="border-primary/50 text-primary bg-primary/10">Squad: Finanças</Badge>
-                        <Badge variant="outline" className="border-cyan-500/50 text-cyan-500 bg-cyan-500/10">Domínio: Vendas</Badge>
+                        <Badge variant="outline" className="border-cyan-500/50 text-cyan-600 dark:text-cyan-500 bg-cyan-500/10">Domínio: Vendas</Badge>
                         <span className="flex items-center gap-1"><Activity className="w-4 h-4 text-emerald-500" /> Healthy</span>
                     </div>
                 </div>
                 <div className="flex gap-3">
-                    <Button variant="outline" size="sm" className="glass-panel hover:bg-white/10">
+                    <Button variant="outline" size="sm" className="glass-panel hover:bg-accent transition-colors">
                         <RefreshCcw className="w-4 h-4 mr-2" />
-                        Sync Data
+                        {t("common.sync")}
                     </Button>
                     <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_15px_rgba(16,185,129,0.4)]">
-                        Open Repo <ExternalLink className="w-3 h-3 ml-2" />
+                        {t("common.openRepo")} <ExternalLink className="w-3 h-3 ml-2" />
                     </Button>
                 </div>
             </div>
 
             <Tabs defaultValue="overview" className="w-full">
-                <TabsList className="glass-panel border border-white/5 bg-transparent p-1">
-                    <TabsTrigger value="overview" className="data-[state=active]:bg-white/10 data-[state=active]:text-white">Overview Tático</TabsTrigger>
-                    <TabsTrigger value="value-chain" className="data-[state=active]:bg-white/10">Cadeia de Valor</TabsTrigger>
+                <TabsList className="bg-muted p-1 border border-border">
+                    <TabsTrigger value="overview" className="data-[state=active]:bg-background data-[state=active]:shadow-sm">{t("tabs.overview")}</TabsTrigger>
+                    <TabsTrigger value="value-chain" className="data-[state=active]:bg-background data-[state=active]:shadow-sm">{t("tabs.valuechain")}</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="overview" className="mt-6 space-y-6">
                     <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
 
                         {/* FinOps Card */}
-                        <Card className="glass-panel border-white/10 shadow-lg relative overflow-hidden">
+                        <Card className="border-border shadow-lg relative overflow-hidden bg-card">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full blur-3xl -mr-10 -mt-10" />
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2">
-                                    <DollarSign className="w-5 h-5 text-emerald-400" />
+                                    <DollarSign className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                                     {t("finops.title")}
                                 </CardTitle>
                                 <CardDescription>{t("finops.desc")}</CardDescription>
@@ -78,14 +69,14 @@ export function ServiceDetail() {
                                 <div className="flex justify-between items-end mb-2">
                                     <div>
                                         <p className="text-sm font-medium text-muted-foreground">Projeção do Mês</p>
-                                        <p className="text-3xl font-bold tracking-tight text-white/90">
+                                        <p className="text-3xl font-bold tracking-tight text-foreground/90">
                                             ${MOCK_FINOPS_COSTS.projectedMonthTotal.toFixed(2)}
                                         </p>
                                     </div>
                                     {MOCK_FINOPS_COSTS.wasteIdentified > 0 && (
                                         <div className="text-right">
-                                            <p className="text-xs text-amber-500 font-semibold mb-1">Cloud Waste Identificado</p>
-                                            <Badge variant="destructive" className="bg-amber-500/10 text-amber-500 border-amber-500/20">
+                                            <p className="text-xs text-amber-600 dark:text-amber-500 font-semibold mb-1">Cloud Waste Identificado</p>
+                                            <Badge variant="destructive" className="bg-amber-500/10 text-amber-600 dark:text-amber-500 border-amber-500/20">
                                                 ${MOCK_FINOPS_COSTS.wasteIdentified.toFixed(2)} idle
                                             </Badge>
                                         </div>
@@ -99,7 +90,7 @@ export function ServiceDetail() {
                                                 <span className="text-muted-foreground text-xs">{svc.name}</span>
                                                 <span className="font-mono text-xs">${svc.cost}</span>
                                             </div>
-                                            <Progress value={svc.percentage} className="h-1.5 bg-white/5" />
+                                            <Progress value={svc.percentage} className="h-1.5 bg-muted" />
                                         </div>
                                     ))}
                                 </div>
@@ -107,23 +98,23 @@ export function ServiceDetail() {
                         </Card>
 
                         {/* AppSec Card */}
-                        <Card className="glass-panel border-white/10 shadow-lg relative overflow-hidden">
+                        <Card className="border-border shadow-lg relative overflow-hidden bg-card">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/20 rounded-full blur-3xl -mr-10 -mt-10" />
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2">
-                                    <ShieldAlert className="w-5 h-5 text-rose-500" />
+                                    <ShieldAlert className="w-5 h-5 text-rose-600 dark:text-rose-500" />
                                     {t("appsec.title")}
                                 </CardTitle>
                                 <CardDescription>{t("appsec.desc")}</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-5">
                                 <div className="flex items-center gap-4">
-                                    <div className="flex-shrink-0 w-16 h-16 rounded-full border-[3px] border-rose-500/30 flex items-center justify-center text-rose-400 font-bold text-2xl shadow-[0_0_15px_rgba(225,29,72,0.2)]">
+                                    <div className="flex-shrink-0 w-16 h-16 rounded-full border-[3px] border-rose-500/30 flex items-center justify-center text-rose-600 dark:text-rose-400 font-bold text-2xl shadow-[0_0_15px_rgba(225,29,72,0.1)] dark:shadow-[0_0_15px_rgba(225,29,72,0.2)]">
                                         {MOCK_SECURITY_SCORE.score}
                                     </div>
                                     <div className="flex flex-wrap gap-2">
                                         {MOCK_SECURITY_SCORE.compliance.map(c => (
-                                            <Badge key={c} variant="outline" className="border-emerald-500/30 text-emerald-400 bg-emerald-500/5">
+                                            <Badge key={c} variant="outline" className="border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/5">
                                                 <CheckCircle className="w-3 h-3 mr-1" /> {c}
                                             </Badge>
                                         ))}
@@ -132,12 +123,12 @@ export function ServiceDetail() {
                                 <div className="space-y-2">
                                     <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Vulnerabilidades Abertas</p>
                                     {MOCK_SECURITY_SCORE.cves.map(cve => (
-                                        <div key={cve.id} className="flex justify-between items-center text-sm p-2 rounded-md bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
+                                        <div key={cve.id} className="flex justify-between items-center text-sm p-2 rounded-md bg-muted border border-border hover:bg-secondary transition-colors">
                                             <div className="flex gap-2 items-center">
-                                                <AlertTriangle className={cve.severity === 'CRITICAL' ? 'text-rose-500 w-4 h-4' : 'text-amber-500 w-4 h-4'} />
-                                                <span className="font-mono text-xs text-white/80">{cve.id}</span>
+                                                <AlertTriangle className={cve.severity === 'CRITICAL' ? 'text-rose-600 dark:text-rose-500 w-4 h-4' : 'text-amber-600 dark:text-amber-500 w-4 h-4'} />
+                                                <span className="font-mono text-xs text-foreground/80">{cve.id}</span>
                                             </div>
-                                            <Badge variant="destructive" className="text-[10px] h-5 bg-rose-500/20 text-rose-400 border-rose-500/30">
+                                            <Badge variant="destructive" className="text-[10px] h-5 bg-rose-500/20 text-rose-600 dark:text-rose-400 border-rose-500/30">
                                                 {cve.severity}
                                             </Badge>
                                         </div>
@@ -147,23 +138,23 @@ export function ServiceDetail() {
                         </Card>
 
                         {/* CI/CD Card */}
-                        <Card className="glass-panel border-white/10 shadow-lg">
+                        <Card className="border-border shadow-lg bg-card">
                             <CardHeader className="flex flex-row items-center justify-between">
                                 <div>
                                     <CardTitle className="flex items-center gap-2">
-                                        <TerminalSquare className="w-5 h-5 text-blue-400" />
+                                        <TerminalSquare className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                                         {t("actions.title")}
                                     </CardTitle>
                                     <CardDescription>{t("actions.desc")}</CardDescription>
                                 </div>
-                                <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-white/10 rounded-full">
+                                <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-muted rounded-full">
                                     <RefreshCcw className="w-4 h-4 text-muted-foreground" />
                                 </Button>
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-3">
                                     {MOCK_ACTIONS.map(run => (
-                                        <div key={run.id} className="flex items-center justify-between text-sm p-2 rounded border border-white/5 bg-black/20 group hover:border-white/20 transition-all">
+                                        <div key={run.id} className="flex items-center justify-between text-sm p-2 rounded border border-border bg-muted/50 group hover:border-primary/30 transition-all">
                                             <div className="flex items-center gap-3">
                                                 {run.status === 'success' ? (
                                                     <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
@@ -171,7 +162,7 @@ export function ServiceDetail() {
                                                     <div className="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(225,29,72,0.8)] animate-pulse" />
                                                 )}
                                                 <div>
-                                                    <p className="text-xs font-medium text-white/90">#{run.id} {run.workflow}</p>
+                                                    <p className="text-xs font-medium text-foreground/90">#{run.id} {run.workflow}</p>
                                                     <div className="flex gap-2 items-center text-[10px] text-muted-foreground mt-0.5">
                                                         <span className="flex items-center"><GitBranch className="w-3 h-3 mr-0.5" /> {run.branch}</span>
                                                         <span>•</span>
@@ -182,7 +173,7 @@ export function ServiceDetail() {
                                             <div className="text-right flex flex-col items-end">
                                                 <span className="text-[10px] text-muted-foreground">{run.time}</span>
                                                 {run.status === 'failure' && (
-                                                    <Button variant="ghost" size="sm" className="h-5 px-2 text-[10px] mt-1 hover:text-white border border-white/10">Re-run</Button>
+                                                    <Button variant="ghost" size="sm" className="h-5 px-2 text-[10px] mt-1 hover:bg-white dark:hover:bg-white/10 border border-border">Re-run</Button>
                                                 )}
                                             </div>
                                         </div>
@@ -192,10 +183,10 @@ export function ServiceDetail() {
                         </Card>
 
                         {/* ITSM - Jira and Service Now Combined */}
-                        <Card className="glass-panel border-white/10 lg:col-span-2 xl:col-span-3">
+                        <Card className="border-border lg:col-span-2 xl:col-span-3 bg-card shadow-sm">
                             <CardHeader>
                                 <CardTitle>{t("jira.title")}</CardTitle>
-                                <CardDescription>Tickets Ativos & Sprints</CardDescription>
+                                <CardDescription>{t("jira.desc")}</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -207,15 +198,15 @@ export function ServiceDetail() {
                                         </h3>
                                         <div className="space-y-2">
                                             {MOCK_JIRA.map(issue => (
-                                                <div key={issue.key} className="flex justify-between items-center p-3 rounded bg-white/5 border border-white/5 hover:bg-white/10">
+                                                <div key={issue.key} className="flex justify-between items-center p-3 rounded bg-muted/30 border border-border hover:bg-secondary transition-colors">
                                                     <div className="flex flex-col gap-1">
                                                         <div className="flex gap-2 items-center">
-                                                            <span className="font-mono text-xs font-bold text-blue-400">{issue.key}</span>
+                                                            <span className="font-mono text-xs font-bold text-blue-600 dark:text-blue-400">{issue.key}</span>
                                                             <Badge variant="outline" className="text-[10px] px-1 h-4">{issue.type}</Badge>
                                                         </div>
-                                                        <span className="text-sm text-white/80">{issue.title}</span>
+                                                        <span className="text-sm text-foreground/80">{issue.title}</span>
                                                     </div>
-                                                    <Badge className="bg-white/10 hover:bg-white/20 text-white border border-white/10">{issue.status}</Badge>
+                                                    <Badge className="bg-muted hover:bg-secondary text-foreground border border-border">{issue.status}</Badge>
                                                 </div>
                                             ))}
                                         </div>
@@ -229,16 +220,16 @@ export function ServiceDetail() {
                                         </h3>
                                         <div className="space-y-2">
                                             {MOCK_SERVICENOW.map(inc => (
-                                                <div key={inc.id} className="flex justify-between items-center p-3 rounded bg-white/5 border border-white/5 hover:border-amber-500/30 transition-colors">
+                                                <div key={inc.id} className="flex justify-between items-center p-3 rounded bg-muted/30 border border-border hover:border-amber-500/30 transition-colors">
                                                     <div className="flex flex-col gap-1">
                                                         <div className="flex gap-2 items-center">
-                                                            <span className="font-mono text-xs font-bold text-amber-500">{inc.id}</span>
+                                                            <span className="font-mono text-xs font-bold text-amber-600 dark:text-amber-500">{inc.id}</span>
                                                             <span className="text-[10px] text-muted-foreground">{inc.created}</span>
                                                         </div>
-                                                        <span className="text-sm text-white/80 truncate max-w-[200px]">{inc.desc}</span>
+                                                        <span className="text-sm text-foreground/80 truncate max-w-[200px]">{inc.desc}</span>
                                                     </div>
                                                     <div className="flex flex-col items-end gap-1">
-                                                        <Badge variant="destructive" className="bg-amber-500/20 text-amber-400 border-amber-500/30 text-[10px] uppercase">{inc.priority}</Badge>
+                                                        <Badge variant="destructive" className="bg-amber-500/20 text-amber-600 dark:text-amber-400 border-amber-500/30 text-[10px] uppercase">{inc.priority}</Badge>
                                                         <span className="text-[10px] text-muted-foreground">{inc.state}</span>
                                                     </div>
                                                 </div>

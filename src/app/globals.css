@@ -17,8 +17,8 @@
   --color-foreground: var(--foreground);
 
   /* Add some standard variables */
-  --background: oklch(0.98 0 0);
-  --foreground: oklch(0.14 0 0);
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.14 0.02 250);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.14 0 0);
   --popover: oklch(1 0 0);

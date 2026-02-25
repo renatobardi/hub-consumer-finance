@@ -15,7 +15,7 @@ const resources = {
             "common.sync": "Sync Data",
             "common.openRepo": "Open Repo",
             "tabs.overview": "Tactical Overview",
-            "tabs.valueChain": "Value Chain",
+            "tabs.valuechain": "Value Chain",
         }
     },
     pt: {
@@ -44,10 +44,10 @@ const resources = {
             "actions.desc": "Últimas 5 ejecuciones del pipeline",
             "jira.title": "Jira & ServiceNow",
             "jira.desc": "Tickets Activos y Sprints",
-            "common.sync": "Sincronizar Datos",
+            "common.sync": "Sincronizar Dados",
             "common.openRepo": "Abrir Repo",
             "tabs.overview": "Resumen Táctico",
-            "tabs.valueChain": "Cadena de Valor",
+            "tabs.valuechain": "Cadena de Valor",
         }
     }
 };

@@ -1,12 +1,17 @@
 "use client";
 
 import { Link, useLocation } from "@tanstack/react-router";
-import { Activity, ShieldAlert, Cpu, GitMerge, DollarSign } from "lucide-react";
+import { Activity, ShieldAlert, Cpu, GitMerge, DollarSign, Languages } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"; // Need to install tooltip
+import { useTranslation } from "react-i18next";
 
 export function Sidebar() {
     const location = useLocation();
+    const { i18n } = useTranslation();
+
+    const changeLanguage = (lng: string) => {
+        i18n.changeLanguage(lng);
+    };
 
     const links = [
         { href: "/", icon: Activity, label: "Command Center" },
@@ -17,9 +22,9 @@ export function Sidebar() {
     ];
 
     return (
-        <aside className="w-16 flex flex-col items-center py-6 gap-6 glass-panel border-r border-white/10 z-20">
+        <aside className="w-16 flex flex-col items-center py-6 gap-6 glass-panel border-r border-border z-20">
             <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.5)]">
-                <Cpu className="text-white w-5 h-5" />
+                <Cpu className="text-primary-foreground w-5 h-5" />
             </div>
 
             <nav className="flex flex-col gap-4 mt-8 flex-1">
@@ -32,12 +37,11 @@ export function Sidebar() {
                                     "p-3 rounded-xl transition-all duration-300",
                                     isActive
                                         ? "bg-primary/20 text-primary shadow-[0_0_10px_rgba(16,185,129,0.3)]"
-                                        : "text-muted-foreground hover:bg-white/5 hover:text-white"
+                                        : "text-muted-foreground hover:bg-secondary hover:text-foreground"
                                 )}
                             >
                                 <link.icon className="w-5 h-5" />
                             </div>
-                            {/* Optional: Add active indicator dot */}
                             {isActive && (
                                 <span className="absolute -left-3 top-1/2 -translate-y-1/2 w-1 h-4 bg-primary rounded-r-full shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
                             )}
@@ -45,6 +49,23 @@ export function Sidebar() {
                     );
                 })}
             </nav>
+
+            <div className="flex flex-col gap-2 pb-2">
+                {['pt', 'en', 'es'].map((lang) => (
+                    <button
+                        key={lang}
+                        onClick={() => changeLanguage(lang)}
+                        className={cn(
+                            "text-[10px] font-bold w-8 h-8 rounded-lg transition-all uppercase",
+                            i18n.language === lang
+                                ? "bg-primary text-primary-foreground shadow-sm"
+                                : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                        )}
+                    >
+                        {lang}
+                    </button>
+                ))}
+            </div>
         </aside>
     );
 }
